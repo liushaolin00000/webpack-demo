@@ -4,12 +4,12 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const {
     CleanWebpackPlugin
 } = require('clean-webpack-plugin');
-
+//引入vue-loader插件
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 module.exports = {
     // 用对象的方式配置多个入口
     entry: {
-        index: "./src/index.js",
-        about: "./src/about.js"
+        main:'./src/main.js'
     },
     output: {
         // 修改输出路径和文件名，[name]是动态的，读取entry的属性
@@ -21,6 +21,15 @@ module.exports = {
         splitChunks: {
             chunks: 'all' // 提取所有文件的共同模块
         }
+    },
+    //模块解释
+    resolve:{
+        //提供别名，方便查找，模块的路径
+        alias:{
+            '@':path.resolve(__dirname,'../src')
+        },
+        //忽略扩展名
+        extensions:['.js','.json','.vue']
     },
     // 模块加载器
     module: {
@@ -47,7 +56,11 @@ module.exports = {
                         outputPath: "images"
                     }
                 }]
-            }
+            },
+            {
+                test: /\.vue$/,
+                use: ['vue-loader']
+			},
         ]
     },
 
@@ -62,5 +75,6 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: "public/index.html"
         }),
+        new VueLoaderPlugin()  //vue加载器插件
     ]
 }
